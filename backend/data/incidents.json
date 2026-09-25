@@ -1,0 +1,146 @@
+[
+  {
+    "id": "inc_jpr_001",
+    "incident_category": "streetlight_outage",
+    "description": "Cluster of 4 streetlights malfunctioning along Amrapali Marg",
+    "severity": "low",
+    "location": {
+      "latitude": 26.9110,
+      "longitude": 75.7420,
+      "zone": "Vaishali Nagar",
+      "address": "Amrapali Marg, Block B",
+      "landmark": "National Handloom",
+      "road_name": "Amrapali Marg"
+    },
+    "timestamp": "2026-09-24T09:15:00+05:30",
+    "status": "resolved",
+    "reported_by": "Citizen App",
+    "estimated_clearance_minutes": 45
+  },
+  {
+    "id": "inc_jpr_002",
+    "incident_category": "road_damage",
+    "description": "Pothole developing on Sitapura industrial feeder lane near RIICO gate",
+    "severity": "medium",
+    "location": {
+      "latitude": 26.7780,
+      "longitude": 75.8450,
+      "zone": "Sitapura",
+      "address": "RIICO Industrial Area, Phase 3",
+      "landmark": "RIICO Gate No. 2",
+      "road_name": "Mahaveer Marg"
+    },
+    "timestamp": "2026-09-24T11:45:00+05:30",
+    "status": "in_progress",
+    "reported_by": "Municipal Patrol",
+    "estimated_clearance_minutes": 180
+  },
+  {
+    "id": "inc_jpr_003",
+    "incident_category": "waterlogging",
+    "description": "Water accumulation starting under Durgapura flyover after initial downpour; depth ~1 foot",
+    "severity": "high",
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road at Durgapura Underpass",
+      "landmark": "Durgapura Flyover Underpass",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T14:40:00+05:30",
+    "status": "in_progress",
+    "reported_by": "Traffic Police Control Room",
+    "estimated_clearance_minutes": 90
+  },
+  {
+    "id": "inc_jpr_004",
+    "incident_category": "waterlogging",
+    "description": "Severe waterlogging at B2 Bypass underpass, water level reaching 2.5 ft, small vehicles submerged",
+    "severity": "critical",
+    "location": {
+      "latitude": 26.8410,
+      "longitude": 75.7820,
+      "zone": "Mansarovar",
+      "address": "B2 Bypass Underpass, Gopalpura Junction",
+      "landmark": "B2 Bypass Crossing",
+      "road_name": "B2 Bypass Road"
+    },
+    "timestamp": "2026-09-24T15:20:00+05:30",
+    "status": "in_progress",
+    "reported_by": "Emergency Civic Helpline",
+    "estimated_clearance_minutes": 120
+  },
+  {
+    "id": "inc_jpr_005",
+    "incident_category": "road_accident",
+    "description": "Two-wheeler skid accident due to wet slippery tarmac on JLN Marg near OTS curve; lane blocked",
+    "severity": "high",
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "JLN Marg near OTS Crossing",
+      "landmark": "OTS Crossing",
+      "road_name": "Jawaharlal Nehru Marg"
+    },
+    "timestamp": "2026-09-24T15:25:00+05:30",
+    "status": "in_progress",
+    "reported_by": "Traffic Police Control Room",
+    "estimated_clearance_minutes": 45
+  },
+  {
+    "id": "inc_jpr_006",
+    "incident_category": "fallen_tree",
+    "description": "Large tree branch snapped under high winds blocking curb lane on Tonk Road near Mahaveer Nagar",
+    "severity": "medium",
+    "location": {
+      "latitude": 26.8280,
+      "longitude": 75.7980,
+      "zone": "Sanganer",
+      "address": "Tonk Road near Mahaveer Nagar Cut",
+      "landmark": "Mahaveer Nagar Gate",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T15:30:00+05:30",
+    "status": "reported",
+    "reported_by": "Citizen App",
+    "estimated_clearance_minutes": 60
+  },
+  {
+    "id": "inc_jpr_007",
+    "incident_category": "waterlogging",
+    "description": "Drainage overflow and waterlogging in Johari Bazaar market lanes, water entering sidewalk shops",
+    "severity": "high",
+    "location": {
+      "latitude": 26.9239,
+      "longitude": 75.8267,
+      "zone": "Pink City",
+      "address": "Johari Bazaar, Walled City",
+      "landmark": "Jama Masjid",
+      "road_name": "Johari Bazaar Road"
+    },
+    "timestamp": "2026-09-24T15:35:00+05:30",
+    "status": "reported",
+    "reported_by": "Trade Association Report",
+    "estimated_clearance_minutes": 150
+  },
+  {
+    "id": "inc_jpr_008",
+    "incident_category": "traffic_signal_failure",
+    "description": "Signal controller short-circuit due to rain at Statue Circle roundabout, manual traffic control initiated",
+    "severity": "medium",
+    "location": {
+      "latitude": 26.9080,
+      "longitude": 75.8010,
+      "zone": "C-Scheme",
+      "address": "Statue Circle Intersection",
+      "landmark": "Statue Circle",
+      "road_name": "Bhagwan Das Road"
+    },
+    "timestamp": "2026-09-24T15:40:00+05:30",
+    "status": "in_progress",
+    "reported_by": "Traffic Police Control Room",
+    "estimated_clearance_minutes": 60
+  }
+]

@@ -1,0 +1,257 @@
+[
+  {
+    "id": "traffic_jpr_001",
+    "congestion_percentage": 35.0,
+    "delay": 5.0,
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "JLN Marg near World Trade Park",
+      "landmark": "World Trade Park",
+      "road_name": "Jawaharlal Nehru Marg"
+    },
+    "timestamp": "2026-09-24T09:00:00+05:30",
+    "severity": "low",
+    "average_speed_kmh": 38.5,
+    "free_flow_speed_kmh": 50.0
+  },
+  {
+    "id": "traffic_jpr_002",
+    "congestion_percentage": 42.0,
+    "delay": 7.5,
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road at Durgapura Junction",
+      "landmark": "Durgapura Flyover",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T09:00:00+05:30",
+    "severity": "medium",
+    "average_speed_kmh": 32.0,
+    "free_flow_speed_kmh": 55.0
+  },
+  {
+    "id": "traffic_jpr_003",
+    "congestion_percentage": 48.0,
+    "delay": 8.0,
+    "location": {
+      "latitude": 26.9239,
+      "longitude": 75.8267,
+      "zone": "Pink City",
+      "address": "MI Road near Ajmeri Gate",
+      "landmark": "Ajmeri Gate",
+      "road_name": "Mirza Ismail Road"
+    },
+    "timestamp": "2026-09-24T09:00:00+05:30",
+    "severity": "medium",
+    "average_speed_kmh": 22.0,
+    "free_flow_speed_kmh": 40.0
+  },
+  {
+    "id": "traffic_jpr_004",
+    "congestion_percentage": 30.0,
+    "delay": 4.0,
+    "location": {
+      "latitude": 26.9080,
+      "longitude": 75.8010,
+      "zone": "C-Scheme",
+      "address": "Statue Circle Roundabout",
+      "landmark": "Statue Circle",
+      "road_name": "Bhagwan Das Road"
+    },
+    "timestamp": "2026-09-24T09:00:00+05:30",
+    "severity": "low",
+    "average_speed_kmh": 35.0,
+    "free_flow_speed_kmh": 45.0
+  },
+  {
+    "id": "traffic_jpr_005",
+    "congestion_percentage": 46.0,
+    "delay": 9.0,
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "JLN Marg near World Trade Park",
+      "landmark": "World Trade Park",
+      "road_name": "Jawaharlal Nehru Marg"
+    },
+    "timestamp": "2026-09-24T12:00:00+05:30",
+    "severity": "medium",
+    "average_speed_kmh": 30.0,
+    "free_flow_speed_kmh": 50.0
+  },
+  {
+    "id": "traffic_jpr_006",
+    "congestion_percentage": 52.0,
+    "delay": 11.0,
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road at Durgapura Junction",
+      "landmark": "Durgapura Flyover",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T12:00:00+05:30",
+    "severity": "medium",
+    "average_speed_kmh": 26.5,
+    "free_flow_speed_kmh": 55.0
+  },
+  {
+    "id": "traffic_jpr_007",
+    "congestion_percentage": 78.0,
+    "delay": 24.0,
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road near Mahaveer Nagar",
+      "landmark": "Durgapura Flyover Underpass",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T14:30:00+05:30",
+    "severity": "high",
+    "average_speed_kmh": 14.0,
+    "free_flow_speed_kmh": 55.0
+  },
+  {
+    "id": "traffic_jpr_008",
+    "congestion_percentage": 72.0,
+    "delay": 19.5,
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "JLN Marg near OTS Crossing",
+      "landmark": "OTS Crossing",
+      "road_name": "Jawaharlal Nehru Marg"
+    },
+    "timestamp": "2026-09-24T14:30:00+05:30",
+    "severity": "high",
+    "average_speed_kmh": 16.5,
+    "free_flow_speed_kmh": 50.0
+  },
+  {
+    "id": "traffic_jpr_009",
+    "congestion_percentage": 68.0,
+    "delay": 18.0,
+    "location": {
+      "latitude": 26.9239,
+      "longitude": 75.8267,
+      "zone": "Pink City",
+      "address": "MI Road near Ajmeri Gate",
+      "landmark": "Ajmeri Gate",
+      "road_name": "Mirza Ismail Road"
+    },
+    "timestamp": "2026-09-24T14:30:00+05:30",
+    "severity": "high",
+    "average_speed_kmh": 12.0,
+    "free_flow_speed_kmh": 40.0
+  },
+  {
+    "id": "traffic_jpr_010",
+    "congestion_percentage": 94.0,
+    "delay": 45.0,
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road Durgapura Underpass",
+      "landmark": "Durgapura Flyover Underpass",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T15:15:00+05:30",
+    "severity": "critical",
+    "average_speed_kmh": 5.2,
+    "free_flow_speed_kmh": 55.0
+  },
+  {
+    "id": "traffic_jpr_011",
+    "congestion_percentage": 88.0,
+    "delay": 36.0,
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "JLN Marg near World Trade Park",
+      "landmark": "World Trade Park",
+      "road_name": "Jawaharlal Nehru Marg"
+    },
+    "timestamp": "2026-09-24T15:15:00+05:30",
+    "severity": "critical",
+    "average_speed_kmh": 8.0,
+    "free_flow_speed_kmh": 50.0
+  },
+  {
+    "id": "traffic_jpr_012",
+    "congestion_percentage": 85.0,
+    "delay": 32.0,
+    "location": {
+      "latitude": 26.8410,
+      "longitude": 75.7820,
+      "zone": "Mansarovar",
+      "address": "B2 Bypass Junction at Gopalpura",
+      "landmark": "B2 Bypass Crossing",
+      "road_name": "B2 Bypass Road"
+    },
+    "timestamp": "2026-09-24T15:15:00+05:30",
+    "severity": "critical",
+    "average_speed_kmh": 9.5,
+    "free_flow_speed_kmh": 60.0
+  },
+  {
+    "id": "traffic_jpr_013",
+    "congestion_percentage": 81.0,
+    "delay": 28.0,
+    "location": {
+      "latitude": 26.9239,
+      "longitude": 75.8267,
+      "zone": "Pink City",
+      "address": "MI Road near Panch Batti",
+      "landmark": "Panch Batti",
+      "road_name": "Mirza Ismail Road"
+    },
+    "timestamp": "2026-09-24T15:15:00+05:30",
+    "severity": "high",
+    "average_speed_kmh": 7.5,
+    "free_flow_speed_kmh": 40.0
+  },
+  {
+    "id": "traffic_jpr_014",
+    "congestion_percentage": 74.0,
+    "delay": 22.0,
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road near Mahaveer Nagar",
+      "landmark": "Durgapura Flyover Underpass",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T16:00:00+05:30",
+    "severity": "high",
+    "average_speed_kmh": 18.0,
+    "free_flow_speed_kmh": 55.0
+  },
+  {
+    "id": "traffic_jpr_015",
+    "congestion_percentage": 69.0,
+    "delay": 17.5,
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "JLN Marg near OTS Crossing",
+      "landmark": "OTS Crossing",
+      "road_name": "Jawaharlal Nehru Marg"
+    },
+    "timestamp": "2026-09-24T16:00:00+05:30",
+    "severity": "high",
+    "average_speed_kmh": 22.0,
+    "free_flow_speed_kmh": 50.0
+  }
+]

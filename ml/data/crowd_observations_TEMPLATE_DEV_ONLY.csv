@@ -1,0 +1,6 @@
+example_only,timestamp,zone,temperature_c,rainfall_mm,humidity_pct,wind_speed_kmh,air_quality_index,weather_condition,congestion_percentage,traffic_delay_minutes,average_speed_kmh,incident_count,active_incident_count,high_critical_incident_count,crowd_level
+TRUE,2026-09-21T08:00:00+05:30,Malviya Nagar,29.4,0,48,8.5,92,Clear,24,3.0,41.0,0,0,0,low
+TRUE,2026-09-21T09:00:00+05:30,Sanganer,30.1,0,45,9.0,98,Clear,46,8.0,31.0,1,1,0,moderate
+TRUE,2026-09-21T10:00:00+05:30,Pink City,31.0,0,43,10.0,105,Haze,61,14.0,22.0,2,2,1,high
+TRUE,2026-09-21T11:00:00+05:30,C-Scheme,32.2,0,40,11.5,111,Partly Cloudy,33,5.0,36.0,0,0,0,low
+TRUE,2026-09-21T12:00:00+05:30,Mansarovar,33.0,0.2,44,13.0,119,Light Drizzle,55,11.0,26.5,1,1,1,moderate

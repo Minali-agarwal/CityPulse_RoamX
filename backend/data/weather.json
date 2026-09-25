@@ -1,0 +1,290 @@
+[
+  {
+    "id": "weather_jpr_001",
+    "temperature": 32.5,
+    "rainfall": 0.0,
+    "humidity": 54.0,
+    "weather_condition": "Haze",
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "Calgiri Marg, Sector 4, Malviya Nagar",
+      "landmark": "Gaurav Tower",
+      "road_name": "JLN Marg"
+    },
+    "timestamp": "2026-09-24T09:00:00+05:30",
+    "wind_speed_kmh": 12.0,
+    "air_quality_index": 142
+  },
+  {
+    "id": "weather_jpr_002",
+    "temperature": 33.0,
+    "rainfall": 0.0,
+    "humidity": 52.0,
+    "weather_condition": "Clear",
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road Corridor, Durgapura",
+      "landmark": "Durgapura Elevated Road",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T09:00:00+05:30",
+    "wind_speed_kmh": 10.5,
+    "air_quality_index": 138
+  },
+  {
+    "id": "weather_jpr_003",
+    "temperature": 31.8,
+    "rainfall": 0.0,
+    "humidity": 56.0,
+    "weather_condition": "Partly Cloudy",
+    "location": {
+      "latitude": 26.9080,
+      "longitude": 75.8010,
+      "zone": "C-Scheme",
+      "address": "Statue Circle, Ashok Nagar",
+      "landmark": "Statue Circle",
+      "road_name": "Bhagwan Das Road"
+    },
+    "timestamp": "2026-09-24T09:00:00+05:30",
+    "wind_speed_kmh": 14.0,
+    "air_quality_index": 120
+  },
+  {
+    "id": "weather_jpr_004",
+    "temperature": 32.2,
+    "rainfall": 0.0,
+    "humidity": 55.0,
+    "weather_condition": "Haze",
+    "location": {
+      "latitude": 26.9239,
+      "longitude": 75.8267,
+      "zone": "Pink City",
+      "address": "Badi Choupad, Walled City",
+      "landmark": "Hawa Mahal",
+      "road_name": "Johari Bazaar Road"
+    },
+    "timestamp": "2026-09-24T09:00:00+05:30",
+    "wind_speed_kmh": 9.0,
+    "air_quality_index": 165
+  },
+  {
+    "id": "weather_jpr_005",
+    "temperature": 31.0,
+    "rainfall": 1.5,
+    "humidity": 72.0,
+    "weather_condition": "Overcast",
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "Calgiri Marg, Sector 4, Malviya Nagar",
+      "landmark": "Gaurav Tower",
+      "road_name": "JLN Marg"
+    },
+    "timestamp": "2026-09-24T12:00:00+05:30",
+    "wind_speed_kmh": 18.0,
+    "air_quality_index": 98
+  },
+  {
+    "id": "weather_jpr_006",
+    "temperature": 30.5,
+    "rainfall": 2.0,
+    "humidity": 75.0,
+    "weather_condition": "Light Drizzle",
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road Corridor, Durgapura",
+      "landmark": "Durgapura Elevated Road",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T12:00:00+05:30",
+    "wind_speed_kmh": 19.5,
+    "air_quality_index": 92
+  },
+  {
+    "id": "weather_jpr_007",
+    "temperature": 27.2,
+    "rainfall": 32.0,
+    "humidity": 91.0,
+    "weather_condition": "Heavy Rain",
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "Calgiri Marg, Sector 4, Malviya Nagar",
+      "landmark": "Gaurav Tower",
+      "road_name": "JLN Marg"
+    },
+    "timestamp": "2026-09-24T14:30:00+05:30",
+    "wind_speed_kmh": 34.0,
+    "air_quality_index": 48
+  },
+  {
+    "id": "weather_jpr_008",
+    "temperature": 26.4,
+    "rainfall": 38.5,
+    "humidity": 93.0,
+    "weather_condition": "Thunderstorm",
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road Corridor, Durgapura",
+      "landmark": "Durgapura Elevated Road",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T14:30:00+05:30",
+    "wind_speed_kmh": 42.0,
+    "air_quality_index": 42
+  },
+  {
+    "id": "weather_jpr_009",
+    "temperature": 28.0,
+    "rainfall": 18.0,
+    "humidity": 88.0,
+    "weather_condition": "Moderate Rain",
+    "location": {
+      "latitude": 26.9080,
+      "longitude": 75.8010,
+      "zone": "C-Scheme",
+      "address": "Statue Circle, Ashok Nagar",
+      "landmark": "Statue Circle",
+      "road_name": "Bhagwan Das Road"
+    },
+    "timestamp": "2026-09-24T14:30:00+05:30",
+    "wind_speed_kmh": 28.0,
+    "air_quality_index": 55
+  },
+  {
+    "id": "weather_jpr_010",
+    "temperature": 24.5,
+    "rainfall": 44.0,
+    "humidity": 96.0,
+    "weather_condition": "Severe Thunderstorm",
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "Calgiri Marg, Sector 4, Malviya Nagar",
+      "landmark": "Gaurav Tower",
+      "road_name": "JLN Marg"
+    },
+    "timestamp": "2026-09-24T15:15:00+05:30",
+    "wind_speed_kmh": 46.0,
+    "air_quality_index": 35
+  },
+  {
+    "id": "weather_jpr_011",
+    "temperature": 23.8,
+    "rainfall": 52.0,
+    "humidity": 98.0,
+    "weather_condition": "Torrential Downpour",
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road Corridor, Durgapura",
+      "landmark": "Durgapura Elevated Road",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T15:15:00+05:30",
+    "wind_speed_kmh": 48.0,
+    "air_quality_index": 30
+  },
+  {
+    "id": "weather_jpr_012",
+    "temperature": 25.0,
+    "rainfall": 28.0,
+    "humidity": 94.0,
+    "weather_condition": "Heavy Rain",
+    "location": {
+      "latitude": 26.9080,
+      "longitude": 75.8010,
+      "zone": "C-Scheme",
+      "address": "Statue Circle, Ashok Nagar",
+      "landmark": "Statue Circle",
+      "road_name": "Bhagwan Das Road"
+    },
+    "timestamp": "2026-09-24T15:15:00+05:30",
+    "wind_speed_kmh": 32.0,
+    "air_quality_index": 45
+  },
+  {
+    "id": "weather_jpr_013",
+    "temperature": 25.5,
+    "rainfall": 22.0,
+    "humidity": 92.0,
+    "weather_condition": "Heavy Rain",
+    "location": {
+      "latitude": 26.9239,
+      "longitude": 75.8267,
+      "zone": "Pink City",
+      "address": "Badi Choupad, Walled City",
+      "landmark": "Hawa Mahal",
+      "road_name": "Johari Bazaar Road"
+    },
+    "timestamp": "2026-09-24T15:15:00+05:30",
+    "wind_speed_kmh": 26.0,
+    "air_quality_index": 48
+  },
+  {
+    "id": "weather_jpr_014",
+    "temperature": 25.8,
+    "rainfall": 31.0,
+    "humidity": 95.0,
+    "weather_condition": "Heavy Rain",
+    "location": {
+      "latitude": 26.8625,
+      "longitude": 75.7625,
+      "zone": "Mansarovar",
+      "address": "Madhyam Marg, Sector 5",
+      "landmark": "Mansarovar Metro Station",
+      "road_name": "Madhyam Marg"
+    },
+    "timestamp": "2026-09-24T15:15:00+05:30",
+    "wind_speed_kmh": 30.0,
+    "air_quality_index": 40
+  },
+  {
+    "id": "weather_jpr_015",
+    "temperature": 26.0,
+    "rainfall": 8.5,
+    "humidity": 89.0,
+    "weather_condition": "Moderate Rain",
+    "location": {
+      "latitude": 26.8530,
+      "longitude": 75.8150,
+      "zone": "Malviya Nagar",
+      "address": "Calgiri Marg, Sector 4, Malviya Nagar",
+      "landmark": "Gaurav Tower",
+      "road_name": "JLN Marg"
+    },
+    "timestamp": "2026-09-24T16:00:00+05:30",
+    "wind_speed_kmh": 16.0,
+    "air_quality_index": 52
+  },
+  {
+    "id": "weather_jpr_016",
+    "temperature": 25.2,
+    "rainfall": 11.0,
+    "humidity": 90.0,
+    "weather_condition": "Moderate Rain",
+    "location": {
+      "latitude": 26.8220,
+      "longitude": 75.7950,
+      "zone": "Sanganer",
+      "address": "Tonk Road Corridor, Durgapura",
+      "landmark": "Durgapura Elevated Road",
+      "road_name": "Tonk Road"
+    },
+    "timestamp": "2026-09-24T16:00:00+05:30",
+    "wind_speed_kmh": 18.0,
+    "air_quality_index": 50
+  }
+]

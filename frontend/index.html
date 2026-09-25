@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityPulse Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Using Phosphor Icons for modern vector icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <i class="ph-fill ph-pulse"></i>
+            <span class="logo-text">CityPulse</span>
+        </div>
+        <div class="nav-links">
+            <a href="#dashboard" class="nav-link active">Dashboard</a>
+            <a href="#map" class="nav-link">Map View</a>
+            <a href="#incidents" class="nav-link">Incidents</a>
+            <a href="#reports" class="nav-link">Reports</a>
+        </div>
+        <div class="nav-actions">
+            <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation" aria-expanded="false">
+                <i class="ph ph-list" id="hamburger-icon"></i>
+            </button>
+            <div class="notification-wrapper">
+                <button class="icon-btn" id="notification-btn">
+                    <i class="ph ph-bell"></i>
+                    <span class="badge" id="notification-badge">3</span>
+                </button>
+                <div class="notification-dropdown glass-panel hidden" id="notification-panel">
+                    <div class="dropdown-header">
+                        <h3>Notifications</h3>
+                        <button class="btn-text" id="mark-all-read">Mark all as read</button>
+                    </div>
+                    <div class="dropdown-body" aria-live="polite">
+                        <p class="api-notification-empty">Connecting to CityPulse…</p>
+                    </div>
+                    <div class="dropdown-footer">
+                        <a href="#incidents">View All Notifications <i class="ph ph-caret-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-avatar">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin&backgroundColor=0f172a" alt="Profile">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="dashboard-container">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="location-info">
+                <h1 id="city-name">Jaipur, RJ</h1>
+                <p class="subtitle" id="current-datetime">Loading date and time...</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" id="refresh-btn">
+                    <i class="ph ph-arrows-clockwise"></i> Refresh
+                </button>
+                <button class="btn btn-primary">
+                    <i class="ph ph-plus"></i> Report Issue
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="dashboard" class="hero-section glass-panel">
+            <div class="hero-content">
+                <h2>City Health Status</h2>
+                <div class="health-score">
+                    <div class="score-circle">
+                        <svg viewBox="0 0 36 36" class="circular-chart green">
+                            <path class="circle-bg"
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path class="circle"
+                                stroke-dasharray="0, 100"
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <text x="18" y="20.35" class="percentage">—</text>
+                        </svg>
+                    </div>
+                    <div class="health-details">
+                        <span class="status-badge status-good">Awaiting data</span>
+                        <p>City health status will appear when backend data is available.</p>
+                        <small class="data-source-note" id="data-source-note">Verifying current data source…</small>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-value">—</span>
+                    <span class="stat-label">Active Incidents</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">—</span>
+                    <span class="stat-label">Reporting Zones</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary Cards Grid -->
+        <section id="incidents" class="summary-cards">
+            <!-- Weather Card -->
+            <div class="card weather-card glass-panel">
+                <div class="card-header">
+                    <h3><i class="ph ph-cloud-sun"></i> Weather</h3>
+                    <div class="header-actions-small">
+                        <span class="last-updated">Awaiting data</span>
+                        <button class="icon-btn-small" title="Refresh"><i class="ph ph-arrows-clockwise"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="weather-top">
+                        <div class="weather-main">
+                            <i class="ph-fill ph-sun"></i>
+                            <div class="temp-wrapper">
+                        <span class="temperature">—</span>
+                        <span class="feels-like">Awaiting observations</span>
+                            </div>
+                        </div>
+                        <div class="condition-badge">Awaiting data</div>
+                    </div>
+                    <small class="provenance-note weather-source-note">Live weather • Open-Meteo</small>
+                    
+                    <div class="visual-indicator">
+                        <div class="indicator-label">
+                            <span>Maximum rainfall</span>
+                            <span>—</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill warning" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="metrics grid-metrics">
+                        <div class="metric-box">
+                            <i class="ph ph-drop"></i>
+                            <div class="metric-info">
+                                <span class="m-val">—</span>
+                                <span class="m-lbl">Humidity</span>
+                            </div>
+                        </div>
+                        <div class="metric-box">
+                            <i class="ph ph-wind"></i>
+                            <div class="metric-info">
+                                <span class="m-val">—</span>
+                                <span class="m-lbl">Wind</span>
+                            </div>
+                        </div>
+                        <div class="metric-box">
+                            <i class="ph ph-leaf"></i>
+                            <div class="metric-info">
+                                <span class="m-val aqi-value good">—</span>
+                                <span class="m-lbl">Air Quality Index</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-text">View Forecast <i class="ph ph-caret-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Traffic Card -->
+            <div class="card traffic-card glass-panel">
+                <div class="card-header">
+                    <h3><i class="ph ph-car-profile"></i> Traffic</h3>
+                    <div class="header-actions-small">
+                        <span class="last-updated">Awaiting data</span>
+                        <button class="icon-btn-small" title="Refresh"><i class="ph ph-arrows-clockwise"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <small class="provenance-note traffic-source-note">Non-live · Development traffic observations</small>
+                    <div class="traffic-overview">
+                        <div class="traffic-status status-moderate">
+                            <div class="pulse-dot"></div>
+                            Awaiting traffic data
+                        </div>
+                        <div class="avg-speed">
+                            <span class="speed-val">—</span>
+                            <span class="speed-unit">km/h avg</span>
+                        </div>
+                    </div>
+
+                    <div class="visual-indicator">
+                        <div class="indicator-label">
+                            <span>Citywide Congestion</span>
+                            <span>—</span>
+                        </div>
+                        <div class="progress-bar">
+                        <div class="progress-fill warning" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="affected-areas">
+                        <h5>Affected Areas</h5>
+                        <ul class="alert-list compact">
+                            <li class="api-notification-empty">Waiting for traffic observations…</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-text">View Details <i class="ph ph-caret-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Civic Alerts Card -->
+            <div class="card civic-card glass-panel">
+                <div class="card-header">
+                    <h3><i class="ph ph-megaphone"></i> Civic Alerts</h3>
+                    <a href="#incidents" class="view-all">View All</a>
+                </div>
+                <div class="card-body">
+                    <small class="provenance-note incident-source-note">User-reported incident records · MongoDB · not independently verified</small>
+                    <div class="incident-summary">
+                        <div class="incident-count">
+                            <span class="count">—</span>
+                            <span class="label">Total Incidents</span>
+                        </div>
+                        <div class="incident-breakdown">
+                            <div class="breakdown-item critical">
+                                <span class="dot"></span> —
+                            </div>
+                            <div class="breakdown-item warning">
+                                <span class="dot"></span> —
+                            </div>
+                            <div class="breakdown-item info">
+                                <span class="dot"></span> —
+                            </div>
+                        </div>
+                    </div>
+                    <section class="recommendations-section" aria-live="polite">
+                        <h4>Recommendations</h4>
+                        <div class="recommendations-list"><p class="api-notification-empty">Waiting for live weather and incident data…</p></div>
+                    </section>
+                    <div class="incident-filters" aria-label="Filter incidents">
+                        <label>Search <input id="incident-search" type="search" placeholder="Category, zone, description"></label>
+                        <label>Status <select id="incident-status-filter"><option value="all">All</option><option value="open">Open</option><option value="in_progress">In Progress</option><option value="resolved">Resolved</option></select></label>
+                        <label>Severity <select id="incident-severity-filter"><option value="all">All</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></label>
+                        <label>Category <select id="incident-category-filter"><option value="all">All</option></select></label>
+                    </div>
+                    <div class="incident-list" aria-live="polite">
+                        <p class="api-notification-empty">Waiting for civic incidents…</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ML Insights Card -->
+            <div class="card ml-insights-card glass-panel">
+                <div class="card-header">
+                    <h3><i class="ph ph-brain"></i> Crowd Prediction</h3>
+                    <div class="ai-indicator">
+                        <i class="ph-fill ph-sparkle"></i> AI Insight
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="prediction-overview">
+                        <div class="prediction-level">
+                            <span class="level-val">—</span>
+                            <span class="level-lbl">Awaiting prediction</span>
+                        </div>
+                        <div class="prediction-confidence">
+                            <span class="conf-val">—</span>
+                            <span class="conf-lbl">Confidence</span>
+                        </div>
+                    </div>
+
+                    <div class="simple-chart">
+                        <div class="chart-bar" style="height: 0%;" title="Low probability"><span class="bar-lbl">Low</span></div>
+                        <div class="chart-bar" style="height: 0%;" title="Moderate probability"><span class="bar-lbl">Moderate</span></div>
+                        <div class="chart-bar" style="height: 0%;" title="High probability"><span class="bar-lbl">High</span></div>
+                    </div>
+                    
+                    <p class="insight-text">
+                        <i class="ph ph-info"></i> Waiting for a live crowd prediction.
+                    </p>
+                    <p class="ml-model-note">Development model trained on synthetic demo labels; predictions are not real-world validated.</p>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-text">View Prediction <i class="ph ph-caret-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section id="map" class="map-section glass-panel">
+            <div class="map-header">
+                <h3><i class="ph ph-map-trifold"></i> Live City Map</h3>
+                <div class="map-controls">
+                    <button class="map-btn active">All</button>
+                    <button class="map-btn"><i class="ph ph-traffic-cone"></i> Traffic</button>
+                    <button class="map-btn"><i class="ph ph-warning-circle"></i> Incidents</button>
+                    <button class="map-btn"><i class="ph ph-cloud-sun"></i> Weather</button>
+                </div>
+            </div>
+            <div class="map-interactive-area">
+                <p class="map-data-note">Jaipur, Rajasthan · OpenStreetMap roads · incidents: MongoDB user reports · traffic: stored development data · weather: Open-Meteo when available</p>
+                <div id="citypulse-map" class="citypulse-leaflet-map" role="application" aria-label="Interactive map of Jaipur, Rajasthan"></div>
+                <details class="map-unmapped" hidden>
+                    <summary>Unmapped events</summary>
+                    <div class="map-unmapped-list"></div>
+                </details>
+                
+                <!-- Zoom and Map Controls -->
+                <div class="map-zoom-controls">
+                    <button class="icon-btn zoom-btn"><i class="ph ph-plus"></i></button>
+                    <button class="icon-btn zoom-btn"><i class="ph ph-minus"></i></button>
+                    <div class="control-divider"></div>
+                    <button class="icon-btn zoom-btn"><i class="ph ph-crosshair"></i></button>
+                    <button class="icon-btn zoom-btn"><i class="ph ph-layers"></i></button>
+                </div>
+
+                <!-- Map Legend -->
+                <div class="map-legend glass-panel">
+                    <h4>Legend</h4>
+                    <div class="legend-item">
+                        <div class="marker-icon-small traffic"><i class="ph-fill ph-traffic-cone"></i></div>
+                        <span>Traffic Congestion</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="marker-icon-small incident"><i class="ph-fill ph-warning-circle"></i></div>
+                        <span>Civic Incident</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="marker-icon-small weather"><i class="ph-fill ph-cloud-sun"></i></div>
+                        <span>Weather Observation</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="reports" class="reports-section glass-panel" aria-labelledby="reports-title">
+            <div class="reports-header">
+                <div>
+                    <h3 id="reports-title"><i class="ph ph-chart-bar"></i> City Reports</h3>
+                    <p>Current incident, weather, traffic, and model-predicted crowd summaries.</p>
+                </div>
+                <button class="btn btn-outline" id="reports-refresh-btn" type="button"><i class="ph ph-arrows-clockwise"></i> Refresh reports</button>
+            </div>
+            <div class="reports-content" aria-live="polite">
+                <div class="reports-stat-grid">
+                    <article class="report-stat"><span>Total incidents</span><strong id="report-total-incidents">—</strong></article>
+                    <article class="report-stat"><span>Open incidents</span><strong id="report-open-incidents">—</strong></article>
+                    <article class="report-stat"><span>Resolved incidents</span><strong id="report-resolved-incidents">—</strong></article>
+                    <article class="report-stat"><span>Average congestion</span><strong id="report-average-congestion">—</strong></article>
+                    <article class="report-stat"><span>Average traffic delay</span><strong id="report-average-delay">—</strong></article>
+                </div>
+                <div class="reports-chart-grid">
+                    <article class="report-chart-card"><h4>Incidents by category</h4><div id="report-category-chart" class="report-bar-list"></div></article>
+                    <article class="report-chart-card"><h4>Incidents by severity</h4><div id="report-severity-chart" class="report-bar-list"></div></article>
+                    <article class="report-chart-card"><h4>Predicted crowd levels by zone</h4><div id="report-crowd-chart" class="report-bar-list"></div><small>Current model predictions across zones; trained on synthetic development labels.</small></article>
+                </div>
+                <p class="reports-data-note" id="reports-data-note">Waiting for backend report data…</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Details and report submission modal -->
+    <div id="mock-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h3 id="modal-title">Details</h3>
+                <button class="icon-btn close-modal"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <p>Details will appear here when available.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">Close</button>
+            <button class="btn btn-primary" style="display: none;"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="app.js"></script>
+</body>
+</html>
