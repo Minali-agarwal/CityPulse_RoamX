@@ -74,7 +74,7 @@
         <!-- Hero Section -->
         <section id="dashboard" class="hero-section glass-panel">
             <div class="hero-content">
-                <h2>City Health Status</h2>
+                <h2>Indicative City Health Score</h2>
                 <div class="health-score">
                     <div class="score-circle">
                         <svg viewBox="0 0 36 36" class="circular-chart green">
@@ -93,9 +93,11 @@
                         </svg>
                     </div>
                     <div class="health-details">
-                        <span class="status-badge status-good">Awaiting data</span>
-                        <p>City health status will appear when backend data is available.</p>
-                        <small class="data-source-note" id="data-source-note">Verifying current data source…</small>
+                        <span class="status-badge" id="hero-status-badge">Awaiting data</span>
+                        <p id="hero-health-description">Composite city condition score based on current weather, reported incidents, traffic conditions, crowd levels, and affected zones.</p>
+                        <small class="data-source-note" id="data-source-note">Checking current data sources…</small>
+                        <small class="health-score-disclaimer">Indicative operational metric, not a literal measure of city health.</small>
+                        <div class="health-score-factors" id="health-score-factors" aria-live="polite" hidden></div>
                     </div>
                 </div>
             </div>

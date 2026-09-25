@@ -732,6 +732,16 @@ h1, h2, h3, h4 {
 .recommendation-item strong { font-size: 0.82rem; }
 .recommendation-item p { margin: 3px 0; font-size: 0.78rem; line-height: 1.4; color: var(--text-secondary); }
 
+.recommendation-item.priority-high { --recommendation-color: #D83A32; }
+.recommendation-item.priority-medium { --recommendation-color: #E5A52F; }
+.recommendation-item.priority-low { --recommendation-color: #9A7B43; }
+.recommendation-item.priority-positive { --recommendation-color: #72A65A; }
+.recommendation-item[class*="priority-"] {
+    border-left: 3px solid var(--recommendation-color);
+    padding-left: 8px;
+}
+.recommendation-item[class*="priority-"] strong { color: var(--recommendation-color); }
+
 .incident-count {
     display: flex;
     flex-direction: column;
@@ -3647,6 +3657,102 @@ a:focus-visible {
     color: #716E68;
     font-size: 0.76rem;
     line-height: 1.45;
+}
+
+/* City Health is a data-derived score, with compact provenance and factor details. */
+.dashboard-container > #dashboard .percentage {
+    font-size: 7px;
+    letter-spacing: -0.2px;
+}
+
+.dashboard-container > #dashboard .health-score-disclaimer {
+    display: block;
+    margin-top: 5px;
+    color: #716E68;
+    font-size: 0.7rem;
+    line-height: 1.4;
+}
+
+.dashboard-container > #dashboard .health-score-factors {
+    margin-top: 8px;
+    color: #625e57;
+    font-size: 0.76rem;
+    line-height: 1.45;
+}
+
+.dashboard-container > #dashboard .health-score-factors[hidden] {
+    display: none;
+}
+
+.dashboard-container > #dashboard .health-score-factors-title {
+    color: #34312c;
+}
+
+.dashboard-container > #dashboard .health-score-factor-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+    margin: 3px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dashboard-container > #dashboard .health-score-factor-list li {
+    min-width: 0;
+}
+
+.dashboard-container > #dashboard .health-score-factor-list .factor-name {
+    font-weight: 600;
+}
+
+.dashboard-container > #dashboard .health-score-factor-list .is-caution .factor-name::before {
+    content: "• ";
+    color: #D47A2B;
+}
+
+.dashboard-container > #dashboard .health-score-factor-list .is-neutral .factor-name::before {
+    content: "• ";
+    color: #72A65A;
+}
+
+/* Jaipur identity watermark: sits above the card fill, below all hero content. */
+.dashboard-container > #dashboard.hero-section::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    bottom: 0;
+    width: 65%;
+    height: 85%;
+    background: url("./assets/jaipur-pink-city.svg") right bottom / 100% auto no-repeat;
+    opacity: 0.12;
+    pointer-events: none;
+    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.3) 24%, #000 72%);
+}
+
+.dashboard-container > #dashboard .hero-content,
+.dashboard-container > #dashboard .hero-stats {
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-container > #dashboard.hero-section::before {
+        width: 60%;
+        height: 70%;
+        opacity: 0.09;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-container > #dashboard.hero-section::before {
+        width: 90%;
+        height: 48%;
+        bottom: 13%;
+        background-size: 125% auto;
+        opacity: 0.1;
+        mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.48) 0%, #000 42%);
+    }
 }
 
 .ml-model-note {

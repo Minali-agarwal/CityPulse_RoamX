@@ -277,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let trafficRecords = null;
     let incidentRecords = null;
     let civicEvents = null;
+    let recommendationSignalsReady = false;
 
     const weatherBody = document.querySelector('.weather-card .card-body');
     const trafficBody = document.querySelector('.traffic-card .card-body');
@@ -621,7 +622,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderWeather() {
-        if (!weatherBody || !Array.isArray(weatherRecords) || !weatherRecords.length) return;
+        if (!weatherBody || !Array.isArray(weatherRecords) || !weatherRecords.length) {
+            updateCityHealthScore();
+            renderRecommendations();
+            return;
+        }
         clearApiState(weatherBody);
         const current = weatherRecords[0];
         const temp = current.temperature;
@@ -658,10 +663,16 @@ document.addEventListener('DOMContentLoaded', () => {
             metrics[2].querySelector('.m-lbl').textContent = 'Air Quality Index';
         }
         updateLastUpdated(weatherBody.closest('.card'), current.fetched_at || current.timestamp);
+        updateCityHealthScore();
+        renderRecommendations();
     }
 
     function renderTraffic() {
-        if (!trafficBody || !Array.isArray(trafficRecords) || !trafficRecords.length) return;
+        if (!trafficBody || !Array.isArray(trafficRecords) || !trafficRecords.length) {
+            updateCityHealthScore();
+            renderRecommendations();
+            return;
+        }
         clearApiState(trafficBody);
         const sourceNote = trafficBody.querySelector('.traffic-source-note');
         if (sourceNote) sourceNote.textContent = 'Non-live · Stored development observations; no live traffic feed configured';
@@ -699,6 +710,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const avgDelay = summary.average_delay_minutes != null ? summary.average_delay_minutes : mean(trafficRecords, row => row.delay);
         heading.textContent = 'Avg delay ' + formatValue(avgDelay, 1) + ' min' + (summary.most_congested_corridor ? ' · Peak: ' + summary.most_congested_corridor : '');
         updateLastUpdated(trafficBody.closest('.card'), trafficRecords[0]?.timestamp);
+        updateCityHealthScore();
+        renderRecommendations();
     }
 
     function displayMeasuredValue(value, digits, suffix) {
@@ -1069,23 +1082,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateDashboard(data) {
         dashboardSnapshot = data;
-        const score = Math.max(0, Math.min(100, Number(data.healthScore) || 0));
         const city = data.city || 'Jaipur';
         const cityName = document.getElementById('city-name');
         if (cityName) cityName.textContent = city === 'Jaipur' ? 'Jaipur, RJ' : city;
-        const scoreText = heroSection?.querySelector('.percentage');
-        if (scoreText) scoreText.textContent = String(score);
-        const circle = heroSection?.querySelector('.circle');
-        if (circle) circle.setAttribute('stroke-dasharray', score + ', 100');
-
-        const badge = heroSection?.querySelector('.status-badge');
-        if (badge) {
-            const label = score >= 70 ? 'Healthy' : score >= 45 ? 'Watch' : 'Needs Attention';
-            badge.className = 'status-badge ' + (score >= 70 ? 'status-good' : score >= 45 ? 'status-moderate' : 'status-alert');
-            badge.textContent = label;
-        }
-        const briefing = heroSection?.querySelector('.health-details p');
-        if (briefing) briefing.textContent = data.summary || 'City status uses available live weather and user-reported MongoDB incidents. Stored traffic observations are development data.';
         updateDataSourceNote();
 
         const values = heroSection?.querySelectorAll('.hero-stats .stat-value');
@@ -1100,25 +1099,232 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!Number.isNaN(date.getTime())) datetimeElement.textContent = date.toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' });
         }
         updateIncidentSummary(data.incidents);
-        renderRecommendations(data.recommendations || []);
+        renderRecommendations();
         if (Array.isArray(weatherRecords) && weatherRecords.length) renderWeather();
         if (Array.isArray(trafficRecords) && trafficRecords.length) renderTraffic();
         if (Array.isArray(incidentRecords)) renderIncidentSummaryFromRecords();
+        updateCityHealthScore();
     }
 
-    function renderRecommendations(items) {
+    function calculateCityHealthScore() {
+        const deductions = { incidents: 0, zones: 0, weather: 0, traffic: 0, crowd: 0 };
+        const factors = [];
+        let availableSignals = 0;
+
+        if (Array.isArray(incidentRecords)) {
+            availableSignals += 1;
+            const active = incidentRecords.filter(record => String(record.status || 'reported').toLowerCase() !== 'resolved');
+            const severityWeight = { low: 0.45, medium: 1.3, high: 2.7, critical: 4.5 };
+            deductions.incidents = Math.min(32, active.reduce((total, record) => {
+                const severity = String(record.severity || '').toLowerCase();
+                return total + (severityWeight[severity] || 0.7);
+            }, 0));
+            const zones = new Set(incidentRecords.map(record => String(record.location?.zone || '').trim().toLowerCase()).filter(Boolean));
+            deductions.zones = Math.min(10, zones.size * 1.2);
+            factors.push({ label: 'Incidents', detail: active.length + ' active · severity weighted', caution: active.length > 0 });
+            factors.push({ label: 'Reporting zones', detail: zones.size ? zones.size + ' reported' : 'No zone names available', caution: zones.size > 0 });
+        } else if (dashboardSnapshot?.incidents
+            && dashboardSnapshot.incidents.active_incidents != null
+            && dashboardSnapshot.incidents.active_incidents !== ''
+            && Number.isFinite(Number(dashboardSnapshot.incidents.active_incidents))) {
+            availableSignals += 1;
+            const activeCount = Math.max(0, Number(dashboardSnapshot.incidents.active_incidents));
+            deductions.incidents = Math.min(32, activeCount * 0.7);
+            factors.push({ label: 'Incidents', detail: activeCount + ' active · severity detail unavailable', caution: activeCount > 0 });
+        } else {
+            factors.push({ label: 'Incidents', detail: 'Unavailable', caution: false });
+        }
+
+        const currentWeather = Array.isArray(weatherRecords) ? weatherRecords[0] : null;
+        if (currentWeather) {
+            availableSignals += 1;
+            const condition = String(currentWeather.weather_condition || '').toLowerCase();
+            const rainfall = currentWeather.rainfall == null || currentWeather.rainfall === '' ? NaN : Number(currentWeather.rainfall);
+            const temperature = currentWeather.temperature == null || currentWeather.temperature === '' ? NaN : Number(currentWeather.temperature);
+            if (Number.isFinite(rainfall)) {
+                if (rainfall >= 10) deductions.weather += 7;
+                else if (rainfall >= 5) deductions.weather += 5;
+                else if (rainfall > 0) deductions.weather += 2;
+            }
+            if (/thunderstorm|storm|heavy rain|snow|blizzard/.test(condition)) deductions.weather += 4;
+            else if (!Number.isFinite(rainfall) && /rain|shower|drizzle/.test(condition)) deductions.weather += 2;
+            if (Number.isFinite(temperature) && (temperature >= 40 || temperature <= 3)) deductions.weather += 2;
+            deductions.weather = Math.min(10, deductions.weather);
+            factors.push({ label: 'Weather', detail: currentWeather.weather_condition || 'Condition unavailable', caution: deductions.weather > 0 });
+        } else {
+            factors.push({ label: 'Weather', detail: 'Unavailable', caution: false });
+        }
+
+        const trafficSummary = dashboardSnapshot?.traffic || {};
+        const summaryCongestion = trafficSummary.average_congestion;
+        const congestion = summaryCongestion != null && summaryCongestion !== '' && Number.isFinite(Number(summaryCongestion))
+            ? Number(summaryCongestion)
+            : Array.isArray(trafficRecords) && trafficRecords.length
+                ? mean(trafficRecords, record => record.congestion_percentage)
+                : null;
+        if (congestion != null && Number.isFinite(congestion)) {
+            availableSignals += 1;
+            if (congestion >= 90) deductions.traffic = 8;
+            else if (congestion >= 75) deductions.traffic = 6;
+            else if (congestion >= 55) deductions.traffic = 3;
+            else if (congestion >= 35) deductions.traffic = 1;
+            factors.push({ label: 'Traffic', detail: formatValue(congestion, 0, '%') + ' congestion · development data', caution: deductions.traffic > 0 });
+        } else {
+            factors.push({ label: 'Traffic', detail: 'Unavailable · development data', caution: false });
+        }
+
+        const crowdLevel = String(predictionSnapshot?.crowd_level || '').toLowerCase();
+        if (['low', 'moderate', 'high'].includes(crowdLevel)) {
+            availableSignals += 1;
+            deductions.crowd = crowdLevel === 'high' ? 5 : crowdLevel === 'moderate' ? 2 : 0;
+            factors.push({ label: 'Crowd', detail: humanize(crowdLevel) + ' · development model', caution: deductions.crowd > 0 });
+        } else {
+            factors.push({ label: 'Crowd', detail: 'Unavailable · development model', caution: false });
+        }
+
+        if (!availableSignals) return null;
+        const totalDeductions = Object.values(deductions).reduce((sum, value) => sum + value, 0);
+        return { score: Math.max(0, Math.min(100, Math.round(100 - totalDeductions))), deductions, factors };
+    }
+
+    function updateCityHealthScore() {
+        if (!heroSection) return;
+        const result = calculateCityHealthScore();
+        const scoreText = heroSection.querySelector('.percentage');
+        const badge = document.getElementById('hero-status-badge');
+        const description = document.getElementById('hero-health-description');
+        const factorsHost = document.getElementById('health-score-factors');
+        const circle = heroSection.querySelector('.circle');
+        if (!result) {
+            if (scoreText) scoreText.textContent = '—';
+            if (badge) {
+                badge.className = 'status-badge';
+                badge.textContent = 'Awaiting data';
+            }
+            if (factorsHost) factorsHost.hidden = true;
+            return;
+        }
+
+        const bands = [
+            { min: 90, label: 'EXCELLENT', color: '#72A65A', bg: 'rgba(114,166,90,.12)' },
+            { min: 75, label: 'GOOD', color: '#5D9B70', bg: 'rgba(93,155,112,.12)' },
+            { min: 60, label: 'FAIR', color: '#C18B24', bg: 'rgba(229,165,47,.16)' },
+            { min: 40, label: 'NEEDS ATTENTION', color: '#D47A2B', bg: 'rgba(212,122,43,.14)' },
+            { min: 0, label: 'CRITICAL', color: '#D83A32', bg: 'rgba(216,58,50,.12)' }
+        ];
+        const band = bands.find(item => result.score >= item.min);
+        if (scoreText) scoreText.textContent = result.score + '/100';
+        if (circle) {
+            circle.setAttribute('stroke-dasharray', result.score + ', 100');
+            circle.style.stroke = band.color;
+        }
+        if (badge) {
+            badge.className = 'status-badge score-status';
+            badge.textContent = band.label;
+            badge.style.color = band.color;
+            badge.style.borderColor = band.color + '55';
+            badge.style.backgroundColor = band.bg;
+        }
+        if (description) description.textContent = 'Composite city condition score based on current weather, reported incidents, traffic conditions, crowd levels, and affected zones.';
+        updateDataSourceNote();
+        if (factorsHost) {
+            factorsHost.hidden = false;
+            factorsHost.replaceChildren(makeElement('strong', 'health-score-factors-title', 'Why this score?'));
+            const list = makeElement('ul', 'health-score-factor-list');
+            result.factors.forEach(factor => {
+                const item = makeElement('li', factor.caution ? 'is-caution' : 'is-neutral');
+                item.append(makeElement('span', 'factor-name', factor.label + ':'), document.createTextNode(' ' + factor.detail));
+                list.append(item);
+            });
+            factorsHost.append(list);
+        }
+    }
+
+    function buildDashboardRecommendations() {
+        const recommendations = [];
+        const priorityRank = { high: 0, medium: 1, low: 2, positive: 3 };
+        const numberOrNull = value => value == null || value === '' || !Number.isFinite(Number(value)) ? null : Number(value);
+        const activeIncidents = Array.isArray(incidentRecords)
+            ? incidentRecords.filter(record => String(record.status || 'reported').toLowerCase() !== 'resolved')
+            : null;
+        const severitySummary = dashboardSnapshot?.incidents?.breakdown_by_severity || {};
+        const lowSeverityCount = activeIncidents
+            ? activeIncidents.filter(record => String(record.severity || '').toLowerCase() === 'low').length
+            : numberOrNull(severitySummary.low);
+        const highSeverityCount = activeIncidents
+            ? activeIncidents.filter(record => ['high', 'critical'].includes(String(record.severity || '').toLowerCase())).length
+            : null;
+        const reportingZones = Array.isArray(incidentRecords)
+            ? new Set(incidentRecords.map(record => String(record.location?.zone || '').trim().toLowerCase()).filter(Boolean)).size
+            : numberOrNull(heroStatItems[1]?.querySelector('.stat-value')?.textContent);
+        const trafficSummary = dashboardSnapshot?.traffic || {};
+        const congestionFromSummary = numberOrNull(trafficSummary.average_congestion);
+        const congestion = congestionFromSummary != null
+            ? congestionFromSummary
+            : Array.isArray(trafficRecords) && trafficRecords.length
+                ? mean(trafficRecords, record => record.congestion_percentage)
+                : null;
+        const weather = Array.isArray(weatherRecords) ? weatherRecords[0] : null;
+        const weatherCondition = String(weather?.weather_condition || '').toLowerCase();
+        const rainfall = numberOrNull(weather?.rainfall);
+        const crowd = String(predictionSnapshot?.crowd_level || '').toLowerCase();
+        const zoneLabel = reportingZones > 0 ? ` across ${reportingZones} reporting zone${reportingZones === 1 ? '' : 's'}` : '';
+        const add = (title, message, priority, source) => recommendations.push({ title, message, priority, source });
+
+        if (highSeverityCount > 0) {
+            add('Prioritize severe civic reports', `${highSeverityCount} active high- or critical-severity incident${highSeverityCount === 1 ? ' is' : 's are'} reported. Review the affected areas first.`, 'high', 'MongoDB user reports');
+        }
+        if (lowSeverityCount >= 5) {
+            const countLabel = activeIncidents ? 'currently active' : 'reported';
+            add('Monitor recurring civic reports', `${lowSeverityCount} low-severity incidents are ${countLabel}${zoneLabel}. Consider monitoring affected zones.`, 'medium', activeIncidents ? 'MongoDB user reports' : 'Dashboard incident summary');
+        }
+        if (reportingZones >= 3 && lowSeverityCount < 5) {
+            add('Review reporting zones', `Incidents are reported across ${reportingZones} zones. Keep an eye on areas with recurring reports.`, reportingZones >= 5 ? 'medium' : 'low', 'MongoDB user reports');
+        }
+        if (congestion != null && Number.isFinite(congestion) && congestion >= 50) {
+            const priority = congestion >= 75 ? 'high' : 'medium';
+            add('Allow extra travel time', `Traffic congestion is currently ${formatValue(congestion, 1, '%')}. Consider allowing additional travel time.`, priority, 'Stored traffic data · non-live development observations');
+        } else if (congestion != null && Number.isFinite(congestion) && congestion >= 35) {
+            add('Check traffic before travelling', `Stored observations show ${formatValue(congestion, 1, '%')} congestion. Check your route before setting out.`, 'low', 'Stored traffic data · non-live development observations');
+        }
+        if (crowd === 'high') {
+            add('Consider a less crowded time', `High crowd levels are predicted for ${predictionZone || 'the monitored area'}. Consider travelling at a less busy time.`, 'high', 'Development crowd prediction model');
+        } else if (crowd === 'moderate') {
+            add('Check crowd conditions', `Moderate crowd levels are predicted for ${predictionZone || 'the monitored area'}. Allow for possible delays.`, 'low', 'Development crowd prediction model');
+        } else if (crowd === 'low') {
+            add('Low crowd levels', `Current crowd levels are low in ${predictionZone || 'the monitored area'}.`, 'positive', 'Development crowd prediction model');
+        }
+
+        if (weather && (/clear|sunny|fair|partly cloudy|mainly clear/.test(weatherCondition)) && (rainfall == null || rainfall === 0)) {
+            add('Favorable weather conditions', 'No weather-related precaution is currently indicated.', 'positive', 'Open-Meteo live forecast');
+        } else if (weather && (rainfall > 0 || /rain|storm|thunder|snow|fog|drizzle|shower/.test(weatherCondition))) {
+            const severeWeather = /thunderstorm|heavy rain|storm|snow/.test(weatherCondition) || rainfall >= 10;
+            add('Use caution in current weather', `${weather.weather_condition || 'Precipitation'}${rainfall != null ? ` with ${formatValue(rainfall, 1, ' mm')} precipitation` : ''} is reported. Check local conditions before travelling.`, severeWeather ? 'high' : 'medium', 'Open-Meteo live forecast');
+        }
+
+        return recommendations
+            .sort((a, b) => priorityRank[a.priority] - priorityRank[b.priority])
+            .slice(0, 3);
+    }
+
+    function renderRecommendations() {
         if (!recommendationsHost) return;
         clearApiState(recommendationsHost);
         recommendationsHost.replaceChildren();
-        if (!Array.isArray(items) || !items.length) {
+        const items = buildDashboardRecommendations();
+        if (!items.length) {
+            if (!recommendationSignalsReady) {
+                recommendationsHost.append(makeElement('p', 'api-notification-empty', 'Checking current incident, traffic, weather, and crowd data…'));
+                return;
+            }
             recommendationsHost.append(makeElement('p', 'api-notification-empty', 'No current recommendations are indicated by the available data.'));
             return;
         }
         items.forEach(item => {
-            const article = makeElement('article', 'recommendation-item');
+            const article = makeElement('article', 'recommendation-item priority-' + item.priority);
             article.append(makeElement('strong', '', item.title || 'Data-backed recommendation'));
             article.append(makeElement('p', '', item.message || 'Details unavailable.'));
-            article.append(makeElement('small', 'provenance-note', 'Source: ' + (item.source || 'Backend data')));
+            article.append(makeElement('small', 'provenance-note', 'Source: ' + item.source));
             recommendationsHost.append(article);
         });
     }
@@ -1260,21 +1466,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateDataSourceNote() {
         const note = document.getElementById('data-source-note');
         if (!note) return '';
-        const sources = dashboardSnapshot?.data_sources;
-        if (sources && typeof sources === 'object') {
-            note.textContent = [
-                'Weather: ' + (sources.weather || 'unavailable'),
-                'Traffic: ' + (sources.traffic || 'unavailable'),
-                'Incidents: ' + (sources.incidents || 'unavailable'),
-                'Crowd: ' + (sources.crowd_prediction || 'unavailable')
-            ].join(' · ');
-            return note.textContent;
-        }
-        if (!dataSourceLabel) return note.textContent = 'Data source could not be verified.';
-        const source = dataSourceLabel.toLowerCase();
-        note.textContent = source.includes('synthetic') || source.includes('local')
-            ? 'Development data · ' + dataSourceLabel
-            : 'Backend data source · ' + dataSourceLabel;
+        const weatherSource = Array.isArray(weatherRecords) && weatherRecords.length ? 'Open-Meteo live forecast' : 'unavailable';
+        const incidentSource = Array.isArray(incidentRecords) && dataSourceLabel === 'MongoDB' ? 'MongoDB user reports' : 'unavailable';
+        const trafficSource = Array.isArray(trafficRecords) && trafficRecords.length ? 'development data (not live)' : 'unavailable';
+        const crowdSource = predictionSnapshot ? 'development ML model; not validated for real-world deployment' : 'unavailable';
+        note.textContent = [
+            'Weather: ' + weatherSource,
+            'Incidents: ' + incidentSource,
+            'Traffic: ' + trafficSource,
+            'Crowd: ' + crowdSource
+        ].join(' · ');
         return note.textContent;
     }
 
@@ -1561,6 +1762,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (recommendationsHost) recommendationsHost.replaceChildren();
             setApiState(recommendationsHost, 'error', message, loadDashboard);
             if (!Array.isArray(incidentRecords)) setApiState(incidentSummaryHost, 'error', message, loadDashboard);
+            updateCityHealthScore();
         }
     }
 
@@ -1570,13 +1772,20 @@ document.addEventListener('DOMContentLoaded', () => {
         setApiState(weatherBody, 'loading', 'Loading weather observations…', loadWeather);
         try {
             weatherRecords = requireArray(await fetchApi('/weather?limit=100' + (forceRefresh ? '&refresh=true' : '')), 'weather');
-            if (!weatherRecords.length) return setApiState(weatherBody, 'empty', 'No weather observations are currently available.');
+            if (!weatherRecords.length) {
+                setApiState(weatherBody, 'empty', 'No weather observations are currently available.');
+                updateCityHealthScore();
+                renderRecommendations();
+                return;
+            }
             clearApiState(weatherBody);
             renderWeather();
         } catch (error) {
             weatherRecords = null;
             if (sourceNote) sourceNote.textContent = 'Weather unavailable · Open-Meteo';
             setApiState(weatherBody, 'error', error.message || 'Could not load weather observations.', loadWeather);
+            updateCityHealthScore();
+            renderRecommendations();
         }
     }
 
@@ -1584,12 +1793,19 @@ document.addEventListener('DOMContentLoaded', () => {
         setApiState(trafficBody, 'loading', 'Loading traffic observations…', loadTraffic);
         try {
             trafficRecords = requireArray(await fetchApi('/traffic?limit=100'), 'traffic');
-            if (!trafficRecords.length) return setApiState(trafficBody, 'empty', 'No traffic observations are currently available.');
+            if (!trafficRecords.length) {
+                setApiState(trafficBody, 'empty', 'No traffic observations are currently available.');
+                updateCityHealthScore();
+                renderRecommendations();
+                return;
+            }
             clearApiState(trafficBody);
             renderTraffic();
         } catch (error) {
             trafficRecords = null;
             setApiState(trafficBody, 'error', error.message || 'Could not load traffic observations.', loadTraffic);
+            updateCityHealthScore();
+            renderRecommendations();
         }
     }
 
@@ -1601,10 +1817,14 @@ document.addEventListener('DOMContentLoaded', () => {
             clearApiState(incidentList);
             renderIncidentSummaryFromRecords();
             renderIncidents();
+            updateCityHealthScore();
+            renderRecommendations();
         } catch (error) {
             incidentRecords = null;
             updateReportingZonesStat(null);
             setApiState(incidentList, 'error', error.message || 'Could not load civic incidents.', loadIncidents);
+            updateCityHealthScore();
+            renderRecommendations();
         }
     }
 
@@ -1754,6 +1974,8 @@ document.addEventListener('DOMContentLoaded', () => {
         clearApiState(crowdPredictionBody);
         crowdPredictionBody.dataset.predictionState = 'success';
         crowdPredictionBody.setAttribute('aria-busy', 'false');
+        updateCityHealthScore();
+        renderRecommendations();
     }
 
     async function loadCrowdPrediction() {
@@ -1773,8 +1995,11 @@ document.addEventListener('DOMContentLoaded', () => {
             renderCrowdPrediction(result, payload.zone, payload.timestamp);
             return true;
         } catch (error) {
+            predictionSnapshot = null;
             crowdPredictionBody.dataset.predictionState = 'error';
             setApiState(crowdPredictionBody, 'error', error.message || 'Could not load the crowd prediction.', retryCrowdPrediction);
+            updateCityHealthScore();
+            renderRecommendations();
             return false;
         }
     }
@@ -1842,10 +2067,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadAllData() {
+        recommendationSignalsReady = false;
         setApiState(crowdPredictionBody, 'loading', 'Loading crowd prediction…');
         crowdPredictionBody.dataset.predictionState = 'loading';
         await Promise.allSettled([loadDashboard(), loadWeather(), loadTraffic(), loadIncidents(), loadCivicEvents(), loadDataSource()]);
         await loadCrowdPrediction();
+        recommendationSignalsReady = true;
+        renderRecommendations();
         await loadReports();
     }
 

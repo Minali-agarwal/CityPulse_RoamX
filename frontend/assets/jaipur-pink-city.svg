@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" fill="none" aria-hidden="true">
+  <g stroke="#795040" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Low Pink City roofline behind the central palace facade. -->
+    <path d="M0 440V378h42v-34l22-23 22 23v34h39v-47h37v-26l19-20 19 20v26h34v109M1046 440v-109h34v-26l19-20 19 20v26h37v47h39v-34l22-23 22 23v34h42v62" fill="#C88670" fill-opacity=".5"/>
+    <path d="M20 440v-42h38v42m75 0v-56h36v56m905 0v-56h36v56m76 0v-42h38v42"/>
+
+    <!-- Original stepped, many-windowed Hawa Mahal inspired facade. -->
+    <path d="M184 440v-68h70v-66h68v-65h68v-65h68v-65h68V63h50V35l24 26 24-26 24 26 24-26 24 28h49v48h68v65h68v65h68v66h68v68h70v68H184Z" fill="#C17861" fill-opacity=".68" stroke-width="7"/>
+
+    <!-- Each story has a balcony cornice and a row of distinctive arched jharokhas. -->
+    <path d="M184 372h832M254 306h692M322 241h556M390 176h420M458 111h284M508 63h184" stroke-width="6"/>
+    <path d="M184 379h70m692 0h70M254 313h68m556 0h68M322 248h68m420 0h68M390 183h68m284 0h68M458 118h50m184 0h50" stroke-width="2"/>
+
+    <!-- Broad lower-storey jharokhas. -->
+    <g fill="#F0D3C2" fill-opacity=".52" stroke-width="3.5">
+      <path d="M204 372v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Zm54 0v-31q20-35 40 0v31Z"/>
+      <path d="M272 306v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Zm53 0v-31q19-34 38 0v31Z"/>
+      <path d="M340 241v-30q19-33 38 0v30Zm51 0v-30q19-33 38 0v30Zm51 0v-30q19-33 38 0v30Zm51 0v-30q19-33 38 0v30Zm51 0v-30q19-33 38 0v30Zm51 0v-30q19-33 38 0v30Zm51 0v-30q19-33 38 0v30Zm51 0v-30q19-33 38 0v30Zm51 0v-30q19-33 38 0v30Zm51 0v-30q19-33 38 0v30Z"/>
+      <path d="M407 176v-29q18-31 36 0v29Zm49 0v-29q18-31 36 0v29Zm49 0v-29q18-31 36 0v29Zm49 0v-29q18-31 36 0v29Zm49 0v-29q18-31 36 0v29Zm49 0v-29q18-31 36 0v29Zm49 0v-29q18-31 36 0v29Zm49 0v-29q18-31 36 0v29Z"/>
+      <path d="M475 111v-27q17-29 34 0v27Zm46 0V84q17-29 34 0v27Zm46 0V84q17-29 34 0v27Zm46 0V84q17-29 34 0v27Zm46 0V84q17-29 34 0v27Z"/>
+    </g>
+
+    <!-- Window mullions, projecting sills and delicate railings. -->
+    <path d="M224 342v30m54-30v30m54-30v30m54-30v30m54-30v30m54-30v30m54-30v30m54-30v30m54-30v30m54-30v30m54-30v30m54-30v30m54-30v30m54-30v30M291 275v31m53-31v31m53-31v31m53-31v31m53-31v31m53-31v31m53-31v31m53-31v31m53-31v31m53-31v31m53-31v31m53-31v31M359 210v31m51-31v31m51-31v31m51-31v31m51-31v31m51-31v31m51-31v31m51-31v31m51-31v31m51-31v31M425 147v29m49-29v29m49-29v29m49-29v29m49-29v29m49-29v29m49-29v29m49-29v29M492 84v27m46-27v27m46-27v27m46-27v27m46-27v27" stroke-width="2.6"/>
+
+    <!-- Small scalloped parapets, lotus finials and top chhatris. -->
+    <path d="M202 362h44m8-66h44m8-65h44m8-65h44m8-65h50m4 0q9-17 18 0t18 0t18 0t18 0t18 0t18 0t18 0M956 362h44m-96-66h44m-96-65h44m-96-65h44m-96-65h50" stroke-width="2"/>
+    <path d="M508 63V47q12-21 24 0v16m26 0V40q14-25 28 0v23m24 0V40q14-25 28 0v23m24 0V47q12-21 24 0v16" fill="#D6A08A" fill-opacity=".7" stroke-width="2.5"/>
+    <path d="M520 47h24m38-7h28m38 7h24M520 35v-8m78 0v-8m78 16v-8" stroke-width="2"/>
+
+    <!-- Pavilion roofs and small domed chhatris frame the palace. -->
+    <path d="M92 331v-24q18-25 36 0v24m-46-24h56m-46-24q18-18 36 0m-18-1v-18m1024 67v-24q18-25 36 0v24m-46-24h56m-46-24q18-18 36 0m-18-1v-18" fill="#D6A08A" fill-opacity=".66" stroke-width="2.5"/>
+    <path d="M112 283q16-22 32 0m1012 0q16-22 32 0" stroke-width="2"/>
+
+    <!-- Ground line and simple stone courses anchor the silhouette. -->
+    <path d="M32 440h1136M165 454h870M184 425h832" stroke-width="2"/>
+  </g>
+</svg>
