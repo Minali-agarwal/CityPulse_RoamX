@@ -271,6 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let predictionSnapshot = null;
     let predictionZone = null;
     let predictionTimestamp = null;
+    let predictionFactors = null;
     let reportPredictions = [];
     let weatherRecords = null;
     let trafficRecords = null;
@@ -570,6 +571,40 @@ document.addEventListener('DOMContentLoaded', () => {
         return String(value || 'Unknown').replace(/[_-]+/g, ' ').replace(/\b\w/g, letter => letter.toUpperCase());
     }
 
+    function incidentDescriptionText(record) {
+        const description = String(record?.description || '').replace(/\s+/g, ' ').trim();
+        if (!description) return 'Description unavailable';
+
+        const parts = description.split(/\s+[—–]\s+/);
+        const hasOpaqueWord = value => {
+            const letters = String(value || '').replace(/[^a-z]/gi, '').toLowerCase();
+            if (letters.length < 5) return false;
+            const vowelCount = (letters.match(/[aeiou]/g) || []).length;
+            return vowelCount / letters.length < 0.24;
+        };
+        const words = description.match(/[a-z]+/gi) || [];
+        const opaqueWords = words.filter(word => hasOpaqueWord(word));
+        const opaqueShortTitle = parts.length > 1
+            && parts[0].trim().split(/\s+/).length === 1
+            && parts[0].trim().length >= 3
+            && !/[aeiou]/i.test(parts[0]);
+        const opaqueSingleToken = words.length === 1 && hasOpaqueWord(words[0]);
+        const placeholderDetails = parts.some(part => /^(?:\.{2,}|…|n\/a)$/i.test(part.trim()));
+
+        if (opaqueWords.length >= 2 || opaqueShortTitle || opaqueSingleToken || placeholderDetails) {
+            return 'Description unavailable';
+        }
+        return description;
+    }
+
+    function incidentLocationText(record) {
+        const location = record?.location || {};
+        return [location.zone, location.address, location.landmark, location.road_name]
+            .map(value => String(value || '').trim())
+            .filter((value, index, values) => value && values.indexOf(value) === index)
+            .join(' · ') || 'Location unavailable';
+    }
+
     function relativeTime(value) {
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) return 'Time unavailable';
@@ -852,11 +887,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const severity = String(row.severity || 'low').toLowerCase();
             const status = String(row.status || 'reported').toLowerCase();
             const item = makeElement('article', 'incident-item ' + (status === 'resolved' ? 'resolved' : 'active') + ' ' + severity + '-severity');
+            item.dataset.incidentId = String(row.id || '').trim();
             item.dataset.category = String(row.incident_category || '');
             item.dataset.severity = severity;
-            item.dataset.description = row.description || '';
+            item.dataset.description = incidentDescriptionText(row);
             item.dataset.status = humanize(status);
-            item.dataset.location = row.location?.address || row.location?.zone || 'Location unavailable';
+            item.dataset.location = incidentLocationText(row);
 
             const header = makeElement('div', 'incident-item-header');
             const badgeClass = severity === 'critical' || severity === 'high' ? 'high' : severity === 'medium' ? 'medium' : 'low';
@@ -869,14 +905,16 @@ document.addEventListener('DOMContentLoaded', () => {
             header.append(badge, timestamp);
 
             const content = makeElement('div', 'incident-content');
-            content.append(makeElement('strong', '', humanize(row.incident_category)));
-            content.append(makeElement('span', 'incident-location', row.location?.zone || 'Location unavailable'));
-            content.append(makeElement('span', 'incident-description', row.description || 'No description provided.'));
+            content.append(makeElement('strong', '', String(row.title || '').trim() || humanize(row.incident_category || 'Civic incident')));
+            content.append(makeElement('span', 'incident-location', item.dataset.location));
+            content.append(makeElement('span', 'incident-description', item.dataset.description));
 
             const footer = makeElement('div', 'incident-footer');
             footer.append(makeElement('span', 'incident-status ' + (status === 'resolved' ? 'resolved' : 'active'), humanize(status)));
             const details = makeElement('button', 'btn-text view-incident', 'View Details ');
             details.type = 'button';
+            details.dataset.incidentId = item.dataset.incidentId;
+            details.setAttribute('aria-label', 'View details for ' + humanize(row.incident_category || 'civic incident') + ' ' + (item.dataset.incidentId || 'record'));
             details.append(makeElement('i', 'ph ph-caret-right'));
             footer.append(details);
             item.append(header, content, footer);
@@ -1149,19 +1187,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const list = makeElement('div', 'dashboard-data-list');
         active.forEach(record => {
             const category = humanize(record.incident_category || 'Incident');
-            const description = String(record.description || 'No description provided.').trim();
-            const separator = description.indexOf(' — ');
-            const title = String(record.title || (separator >= 0 ? description.slice(0, separator) : description));
-            const details = separator >= 0 ? description.slice(separator + 3) : description;
-            const location = record.location || {};
-            const locationText = [location.zone, location.address, location.landmark, location.road_name]
-                .map(value => String(value || '').trim())
-                .filter((value, index, values) => value && values.indexOf(value) === index)
-                .join(' · ') || 'Location unavailable';
+            const description = incidentDescriptionText(record);
+            const title = String(record.title || '').trim() || category;
+            const locationText = incidentLocationText(record);
             const article = makeElement('article', 'dashboard-data-record');
             article.append(makeElement('h4', '', title));
+            addDashboardDataField(article, 'Incident ID:', String(record.id || 'ID unavailable'));
             addDashboardDataField(article, 'Category:', category);
-            addDashboardDataField(article, 'Description:', details);
+            addDashboardDataField(article, 'Description:', description);
             addDashboardDataField(article, 'Location:', locationText);
             addDashboardDataField(article, 'Severity:', humanize(record.severity || 'unknown'));
             addDashboardDataField(article, 'Status:', humanize(record.status || 'unknown'));
@@ -1736,6 +1769,7 @@ document.addEventListener('DOMContentLoaded', () => {
             predictionSnapshot = result;
             predictionZone = payload.zone;
             predictionTimestamp = payload.timestamp;
+            predictionFactors = payload;
             renderCrowdPrediction(result, payload.zone, payload.timestamp);
             return true;
         } catch (error) {
@@ -1767,6 +1801,21 @@ document.addEventListener('DOMContentLoaded', () => {
             addDashboardDataField(details, 'Probabilities:', 'Not provided by the prediction API.');
         }
         addDashboardDataField(details, 'Last updated:', formatIncidentTimestamp(predictionTimestamp));
+        if (predictionFactors) {
+            const availableFactors = [];
+            if (predictionFactors.weather_condition) availableFactors.push('Conditions: ' + humanize(predictionFactors.weather_condition));
+            if (predictionFactors.temperature_c != null) availableFactors.push('Temperature: ' + formatValue(predictionFactors.temperature_c, 1, '°C'));
+            if (predictionFactors.rainfall_mm != null) availableFactors.push('Rainfall: ' + formatValue(predictionFactors.rainfall_mm, 1, ' mm'));
+            if (predictionFactors.humidity_pct != null) availableFactors.push('Humidity: ' + formatValue(predictionFactors.humidity_pct, 0, '%'));
+            if (predictionFactors.wind_speed_kmh != null) availableFactors.push('Wind: ' + formatValue(predictionFactors.wind_speed_kmh, 1, ' km/h'));
+            if (predictionFactors.incident_count != null) availableFactors.push('Incidents in zone: ' + predictionFactors.incident_count);
+            if (predictionFactors.active_incident_count != null) availableFactors.push('Active incidents: ' + predictionFactors.active_incident_count);
+            if (predictionFactors.high_critical_incident_count != null) availableFactors.push('High/critical incidents: ' + predictionFactors.high_critical_incident_count);
+            if (availableFactors.length) {
+                details.append(makeElement('h4', '', 'Available prediction factors'));
+                availableFactors.forEach(factor => addDashboardDataField(details, '', factor));
+            }
+        }
         modalBody.append(details);
         const modelNote = crowdPredictionBody.querySelector('.ml-model-note')?.textContent.trim();
         if (modelNote) modalBody.append(makeElement('p', 'dashboard-data-note', modelNote));
@@ -1833,10 +1882,12 @@ document.addEventListener('DOMContentLoaded', () => {
         loadTrafficDetailsPanel();
     });
 
-    document.querySelector('.ml-insights-card .card-footer .btn-text')?.addEventListener('click', () => {
+    const openCrowdPredictionPanel = () => {
         openDashboardDataPanel('Crowd Prediction');
         loadCrowdPredictionPanel();
-    });
+    };
+    document.querySelector('.ml-insights-card .card-footer .btn-text')?.addEventListener('click', openCrowdPredictionPanel);
+    document.getElementById('crowd-ai-insight')?.addEventListener('click', openCrowdPredictionPanel);
 
     refreshBtn.addEventListener('click', async () => {
         const icon = refreshBtn.querySelector('i');
@@ -1894,21 +1945,28 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', event => {
         const button = event.target.closest('.view-incident');
         if (!button) return;
-        const item = button.closest('.incident-item');
-        if (!item) return;
         event.preventDefault();
-        const category = item.querySelector('.incident-content strong')?.textContent || 'Incident';
-        const title = item.querySelector('.incident-content .incident-description')?.textContent || category;
-        const severity = item.querySelector('.incident-badge')?.textContent.trim() || 'Not reported';
-        const time = item.querySelector('.incident-time')?.textContent || 'Time unavailable';
-        openModal(title, [
-            'Category: ' + category,
-            'Description: ' + item.dataset.description,
-            'Location: ' + item.dataset.location,
-            'Severity: ' + severity,
-            'Status: ' + item.dataset.status,
-            'Date/Time: ' + time
-        ].join('\n'));
+        const incidentId = button.dataset.incidentId || button.closest('.incident-item')?.dataset.incidentId;
+        const record = Array.isArray(incidentRecords)
+            ? incidentRecords.find(candidate => String(candidate.id || '').trim() === incidentId)
+            : null;
+        if (!incidentId || !record) {
+            openDashboardDataPanel('Incident details unavailable');
+            setApiState(modalBody, 'error', 'This incident could not be matched to its backend record. Refresh the incidents and try again.', loadIncidents);
+            return;
+        }
+
+        const title = String(record.title || '').trim() || humanize(record.incident_category || 'Civic incident');
+        openDashboardDataPanel(title);
+        const details = makeElement('article', 'dashboard-data-record');
+        addDashboardDataField(details, 'Incident ID:', String(record.id));
+        addDashboardDataField(details, 'Category / type:', humanize(record.incident_category || 'Unavailable'));
+        addDashboardDataField(details, 'Description:', incidentDescriptionText(record));
+        addDashboardDataField(details, 'Location:', incidentLocationText(record));
+        addDashboardDataField(details, 'Severity:', humanize(record.severity || 'Unavailable'));
+        addDashboardDataField(details, 'Status:', humanize(record.status || 'Unavailable'));
+        addDashboardDataField(details, 'Date/Time:', formatIncidentTimestamp(record.timestamp));
+        modalBody.append(details);
     });
 
     loadAllData();

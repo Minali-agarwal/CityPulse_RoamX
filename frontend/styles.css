@@ -3106,6 +3106,56 @@ h1, h2, h3, h4 {
     color: #648f4c;
 }
 
+.dashboard-container > #incidents > .ml-insights-card {
+    align-self: start;
+    height: fit-content;
+    min-height: 0;
+    gap: 10px;
+}
+
+.dashboard-container > #incidents > .ml-insights-card .ai-indicator {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.dashboard-container > #incidents > .ml-insights-card .ai-indicator:hover {
+    background: rgba(114, 166, 90, 0.16);
+    border-color: rgba(114, 166, 90, 0.38);
+}
+
+.dashboard-container > #incidents > .ml-insights-card .ai-indicator:focus-visible {
+    outline: 2px solid #72A65A;
+    outline-offset: 2px;
+}
+
+.dashboard-container > #incidents > .ml-insights-card .prediction-overview {
+    margin-bottom: 8px;
+}
+
+.dashboard-container > #incidents > .ml-insights-card .simple-chart {
+    height: 76px;
+    margin-bottom: 8px;
+    padding-top: 6px;
+    padding-bottom: 20px;
+}
+
+.dashboard-container > #incidents > .ml-insights-card .insight-text {
+    margin-top: 6px;
+    padding: 8px;
+}
+
+.dashboard-container > #incidents > .ml-insights-card .ml-model-note {
+    margin: 6px 0 0;
+    line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+    .dashboard-container > #incidents > .ml-insights-card .ai-indicator {
+        min-height: 36px;
+        padding-inline: 12px;
+    }
+}
+
 .dashboard-container > #incidents .insight-text {
     color: #5d574f;
     border-left-color: #72A65A;
@@ -3959,4 +4009,3 @@ a:focus-visible {
     .reports-chart-grid {
         grid-template-columns: minmax(0, 1fr);
     }
-
